@@ -15,9 +15,9 @@ MSBD5001 Big Data Computing Projects -- Algorithm Parallelization.
 
 
 
-## Proposal
+## 1. Proposal
 
-### Requirements
+### 1.1. Requirements
 
 The proposal of a deep project should contain the following contents:
 
@@ -25,27 +25,29 @@ The proposal of a deep project should contain the following contents:
 2. Description of the algorithm (pseudo-code or language description).
 3. Brief plan on how to implement it in Spark.
 
-### Draft
+### 1.2. Draft
 
-#### Introduction 
+#### 	Introduction 
 
--- **Liu Jinyu**
+​		-- **Liu Jinyu**
 
-​	*Problem Description & Our target*
+​		*Problem Description & Our target*
 
-#### Traditional DBSCAN
+#### 	Traditional DBSCAN
 
--- **Wang Shen**
+​		-- **Wang Shen**
 
-1. 1. *Algorithm explain*
-   2. *Pseudo-code*
-   3. *Figure illustration*
+​		*Algorithm explain*
 
-#### Spark DBSCAN
+​		*Pseudo-code*
 
--- **Ling Liyang**
+​		*Figure illustration*
 
-1. 1. *Problems on Parallelization*
+#### 	Spark DBSCAN
+
+1. 	1. -- **Ling Liyang**
+
+2. 1. *Problems on Parallelization*
 
    2. 1. *space based*
       2. *data based*
@@ -56,16 +58,15 @@ The proposal of a deep project should contain the following contents:
       2. *partition*
       3. *merging*
 
-### Due Dates
+### 1.3. Due Dates
 
 * **2019/03/18** **Integration** ---- **Song Hongzhen** & **Liu Jinyu**
 
 * **2019/03/22** **Submission**
 
+## 2. Presentation
 
-## Presentation
-
-### Requirements 
+### 2.1. Requirements 
 
 1. Description of the problem.
 2. Description of the algorithm (pseudo-code or language description).
@@ -75,9 +76,9 @@ The proposal of a deep project should contain the following contents:
 
 
 
-## Final Report
+## 3. Final Report
 
-### Requirements
+### 3.1. Requirements
 
 1. The source code of your implementation (as a separate file).
 2. References (including others' implementation of the same algorithm).
