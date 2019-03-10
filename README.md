@@ -28,27 +28,19 @@ The proposal of a deep project should contain the following contents:
 ### 1.2. Draft
 
 1. **Introduction** ---- **Liu Jinyu**
-
-2. 1. Problem Description
-
-3. **Traditional DBSCAN**  ---- **Wang Shen**
-
-4. 1. Algorithm explain
-   2. Pseudo-code
-   3. Figure illustration
-
-5. **Spark DBSCAN** ---- **Ling Liyang**
-
-   1. Problems on Parallelization
-
-   2. 1. space based
-      2. data based
-
-   3. Brief Plan
-
-   4. 1. overview
-      2. partition
-      3. merging
+   1. *Problem Description*
+2. **Traditional DBSCAN**  ---- **Wang Shen**
+   1. *Algorithm explain*
+   2. *Pseudo-code*
+   3. *Figure illustration*
+3. **Spark DBSCAN** ---- **Ling Liyang**
+   1. *Problems on Parallelization*
+      1. *space based*
+      2. *data baseddata baseddata based*
+   2. *Brief Plan*
+      1. *overview*
+      2. *partition*
+      3. *merging*
 
 ### 1.3. Due Dates
 
