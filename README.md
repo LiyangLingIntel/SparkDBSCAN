@@ -77,11 +77,20 @@ The proposal of a deep project should contain the following contents:
 
 * **2019/03/22** **Submission**
 
+## 2. Task Arrangement
 
+1. HDFS&Spark cluster deployment
+2. Sequential DBSCAN efficiency test
+3. Parallel DBSCAN
+   1. Space based partition
+      1. Naïve redundant computation method
+      2. Distance Matrix
+      3. Neighbour List
+   2. Cost based partition
 
-## 2. Presentation
+## 3. Presentation
 
-### 2.1. Requirements 
+### 3.1. Requirements 
 
 1. Description of the problem.
 2. Description of the algorithm (pseudo-code or language description).
@@ -89,11 +98,9 @@ The proposal of a deep project should contain the following contents:
 4. Experimental results, which should demonstrate the scalability of your implementation as the data size and the number of executors grows.
 5. Potential improvements, if any.
 
+## 4. Final Report
 
-
-## 3. Final Report
-
-### 3.1. Requirements
+### 4.1. Requirements
 
 1. The source code of your implementation (as a separate file).
 2. References (including others' implementation of the same algorithm).
