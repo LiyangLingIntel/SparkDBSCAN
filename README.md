@@ -3,6 +3,46 @@ MSBD5001 Big Data Computing Projects -- Algorithm Parallelization.
 
 [TOC]
 
+### Script Description
+
+Current Source Code Architecture is
+
+```pseudocode
+src
+├── serial
+│   ├── __init__.py
+│   └── dbscan.py
+└── test
+    ├── playground.py
+    └── test.py
+```
+
+In `dbscan.py` two ways of serial dbscan algorithm is implemented: Naive method with redundant computation and optimal method with distance matrix.
+
+Here I tested with **Spiral** dataset on [**Clustering basic benchmark**](http://cs.joensuu.fi/sipu/datasets/), which has 312 points of 2-degree and 3-cluster. Got time consuming in mini-second as below:
+
+```pseudocode
+Naive DBSCAN:
+predict: 1886.1682415008545
+Matrix DBSCAN:
+predict: 2.608060836791992
+```
+
+It looks quite acceptable, it might be better in `neighbours map` as we planed, from the evidence of matrix method.
+
+Further works will be on proper **evaluation** method and **parallel** implementation.
+
+## Dues:
+
+- **2019/03/18** **Proposal Integration**
+- **2019/03/22** **Proposal Submission**
+- **2019/04/07** **First Progress Check**
+- **2019/04/14** **Overall Code Works Done**
+
+
+
+## Notes
+
 #### Reference:
 
 * **Project Example:** [Implementation of DBSCAN Algorithm with python Spark APIs](https://www.cse.ust.hk/msbd5003/pastproj/deep1.pdf)
@@ -46,36 +86,9 @@ The proposal of a deep project should contain the following contents:
 
 3. **Parallel DBSCAN** ---- **Ling Liyang**
 
-   1. Overview
+   1. *Overview*
 
-      From the description of sequencial DBSCAN, we know that common DBSCAN is doing works as searching core points, calculating neighbours through distances and giving cluster tags among all given data points recurrently. Fortunately the distance calculation has little relationships among different point pairs which makes it possiple to implement DBSCAN algorithm concurrently. 
-
-      In theory, algorithm efficiency will be improved if the complete dataset can be diveded into multiple independent small data groups, and the points traverse and distance calculation process can be done by several processors. So, the main tasks should we focus on are dataset partitioning and cluster merging.
-
-   2. Plan on parallelisation 
-
-      Before getting started, as most parallel programs, there are two core problems should have the proper solutions.
-
-      First one is data synchronisation. More specifically, we should define a effective way to deal with the points on the boundary of different partitions, in that case, clusters on different partitions could have the posibility to form into the same cluster in the merging process.
-
-      Secondly, the effiency is another key point should be put into consideration. Because based on the first problem, extra calculation is needed for patitioning and communication among partitions. What's more, the workloads and efficiency of each worker should also be considered, or some workers' idle and some workers' with heavy work which is not a ideal situation in parallel programs.
-
-      So, for DBSCAN parallel implementation, we have initially steps as below.
-
-      <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1g1681smic1j30si0wwwhb.jpg" width="450" />
-
-      * Load data from HDFS, preprocess to get input dataset
-      * Analyze dataset to get info about data size and distribution, based on it, allocate data points into partitions through proper methods
-      * Do local DBSCAN on each partition
-      * Merge the clustering results of partitions, remark to get final results
-
-      In the last stage, datasets with different size and data distribution will be applied to test the efficiency of parallelisation and help to improve our algorithm.
-
-### 1.3. Due Dates
-
-* **2019/03/18** **Integration** ---- **Song Hongzhen** & **Liu Jinyu**
-
-* **2019/03/22** **Submission**
+   2. *Plans on parallelisation* 
 
 ## 2. Task Arrangement
 
