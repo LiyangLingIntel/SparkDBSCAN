@@ -2,18 +2,7 @@
 import numpy as np
 from enum import Enum, unique
 
-import time
-
-
-def timeit(func):
-    def wrapper(*args, **wargs):
-        start = time.time()
-        res = func(*args, **wargs)
-        end = time.time()
-        print(f'{func.__name__}: {(end-start)*1000}')
-        return res
-    return wrapper
-
+from src.utils import timeit
 
 # Status
 UNKNOWN = -1
@@ -25,23 +14,14 @@ class DBSCAN(object):
     Base Class of DBSCAN, please do NOT instantiate this Class
     """
 
-    def __init__(self, path):
+    def __init__(self, dataset):
         """
-        DBSCAN Classes should be instantiate with data file path
+        DBSCAN Classes should be instantiate with data point set
         """
-        self.m, _ = self._load_data(path)
+        self.m, _ = (dataset, None)     # placeholder _ for future implementation of labels
         self.num_p = self.m.shape[0]
         self.tags = [UNKNOWN] * self.num_p
-
-    def _load_data(self, path: str):
-        with open(path, 'r') as f:
-            data = []
-            label = []
-            for l in f.readlines():
-                source = l.strip().split()
-                data.append([float(val) for val in source[:2]])
-                label.append(int(source[-1]))
-            return np.array(data), np.array(label)
+        self.is_core = [0] * self.num_p
 
     def _get_dist(self, a, b, fast_mode: bool = False) -> float:
         """
@@ -73,6 +53,13 @@ class DBSCAN(object):
         :param: cluster_id: int; current id of cluster
         """
         pass
+    
+    def _find_core_pts(self, eps, min_pts):
+        self.is_core = [0] * self.num_p
+        for i in range(self.num_p):
+            if len(self._get_neighbours(i, eps, min_pts)) > min_pts:
+                self.is_core[i] = 1
+        return self.is_core
 
     @timeit
     def predict(self, eps, min_pts, fast_mode=False) -> list:
@@ -82,6 +69,8 @@ class DBSCAN(object):
         :param: eps: float; the value of radius of density area
         :param: min_pts: int; least neighbours should be in a density area
         """
+        self.eps = eps
+        self.min_pts = min_pts
 
         cluster_id = 1
         for p_id in range(self.num_p):
@@ -94,8 +83,8 @@ class DBSCAN(object):
 
 class NaiveDBSCAN(DBSCAN):
 
-    def __init__(self, path):
-        super(NaiveDBSCAN, self).__init__(path)
+    def __init__(self, dataset):
+        super(NaiveDBSCAN, self).__init__(dataset)
 
     def _get_neighbours(self, p: int, eps: float, fast_mode=False) -> list:
 
@@ -129,8 +118,8 @@ class NaiveDBSCAN(DBSCAN):
 
 class MatrixDBSCAN(DBSCAN):
 
-    def __init__(self, path):
-        super(MatrixDBSCAN, self).__init__(path)
+    def __init__(self, dataset):
+        super(MatrixDBSCAN, self).__init__(dataset)
         self._get_distance_matrix()     # self.dist_m will be created
         del self.m
 
@@ -148,7 +137,7 @@ class MatrixDBSCAN(DBSCAN):
                 self.dist_m[p_id, q_id] = dist
 
     def _get_neighbours(self, p: int, eps: float, fast_mode=False) -> list:
-        return list(np.nonzero(self.dist_m[p] < eps))
+        return np.nonzero(self.dist_m[p] < eps)[0]
 
     def _clustering(self, p, eps, min_pts, cluster_id, fast_mode=False) -> bool:
         """
@@ -174,7 +163,7 @@ class MatrixDBSCAN(DBSCAN):
                 neighbours = neighbours[1:]
         return True
 
+
 if __name__ == '__main__':
 
     pass
-            
