@@ -1,12 +1,8 @@
-
 import numpy as np
 from enum import Enum, unique
 
 from src.utils import timeit
-
-# Status
-UNKNOWN = -1
-NOISE = -2
+from src.settings import UNKNOWN, NOISE
 
 
 class DBSCAN(object):
@@ -18,7 +14,8 @@ class DBSCAN(object):
         """
         DBSCAN Classes should be instantiate with data point set
         """
-        self.m, _ = (dataset, None)     # placeholder _ for future implementation of labels
+        self.m, _ = (dataset, None
+                     )  # placeholder _ for future implementation of labels
         self.num_p = self.m.shape[0]
         self.tags = [UNKNOWN] * self.num_p
         self.is_core = [0] * self.num_p
@@ -53,7 +50,7 @@ class DBSCAN(object):
         :param: cluster_id: int; current id of cluster
         """
         pass
-    
+
     def _find_core_pts(self, eps, min_pts):
         self.is_core = [0] * self.num_p
         for i in range(self.num_p):
@@ -82,7 +79,6 @@ class DBSCAN(object):
 
 
 class NaiveDBSCAN(DBSCAN):
-
     def __init__(self, dataset):
         super(NaiveDBSCAN, self).__init__(dataset)
 
@@ -94,7 +90,8 @@ class NaiveDBSCAN(DBSCAN):
                 ngbs.append(idx)
         return ngbs
 
-    def _clustering(self, p, eps, min_pts, cluster_id, fast_mode=False) -> bool:
+    def _clustering(self, p, eps, min_pts, cluster_id,
+                    fast_mode=False) -> bool:
 
         neighbours = self._get_neighbours(p, eps, fast_mode)
         if len(neighbours) < min_pts:
@@ -105,7 +102,8 @@ class NaiveDBSCAN(DBSCAN):
             for idx in neighbours:
                 self.tags[idx] = cluster_id
             while len(neighbours) > 0:
-                sub_neighbours = self._get_neighbours(neighbours[0], eps, fast_mode)
+                sub_neighbours = self._get_neighbours(neighbours[0], eps,
+                                                      fast_mode)
                 if len(sub_neighbours) >= min_pts:
                     for sub_n in sub_neighbours:
                         if self.tags[sub_n] < 0:
@@ -117,7 +115,6 @@ class NaiveDBSCAN(DBSCAN):
 
 
 class MatrixDBSCAN(DBSCAN):
-
     def __init__(self, dataset):
         super(MatrixDBSCAN, self).__init__(dataset)
         # self._get_distance_matrix()     # self.dist_m will be created
@@ -141,7 +138,8 @@ class MatrixDBSCAN(DBSCAN):
             self._get_distance_matrix()
         return np.nonzero(self.dist_m[p] < eps)[0]
 
-    def _clustering(self, p, eps, min_pts, cluster_id, fast_mode=False) -> bool:
+    def _clustering(self, p, eps, min_pts, cluster_id,
+                    fast_mode=False) -> bool:
         """
         TODO: There should be some optimizations for this part, current code is too ugly
         """
@@ -155,7 +153,8 @@ class MatrixDBSCAN(DBSCAN):
             for idx in neighbours:
                 self.tags[idx] = cluster_id
             while len(neighbours) > 0:
-                sub_neighbours = self._get_neighbours(neighbours[0], eps, fast_mode)
+                sub_neighbours = self._get_neighbours(neighbours[0], eps,
+                                                      fast_mode)
                 if len(sub_neighbours) >= min_pts:
                     for sub_n in sub_neighbours:
                         if self.tags[sub_n] < 0:
