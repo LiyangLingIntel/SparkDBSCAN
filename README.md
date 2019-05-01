@@ -111,6 +111,27 @@ The proposal of a deep project should contain the following contents:
 4. Experimental results, which should demonstrate the scalability of your implementation as the data size and the number of executors grows.
 5. Potential improvements, if any.
 
+### 3.2 Pipeline
+
+* **Problem Introduction** — 30s
+* **Local DBSCAN Description** — 2min
+* **Implementation in Spark** — 6 min
+  * **General implementation** — 2 min
+    * **Evenly partition**
+    * **Merging**
+  * **Optimizations** — 4 min
+    * **Improvement on local DBSCAB** — 1min
+      - **distance matrix**
+      - **adjacent list**
+    * **Improvements on Partition** — 3 min
+      * **RTree: Cost-based** 
+      * **RTree: Reduced boundary**
+* **Experimental results** — 4 min
+  * **Brief introduction on how to tuning hyper parameters**
+  * **Efficiency  with different data distributions**
+  * **Comparation of above implemetations on each dataset**
+* **Summary and Further work** — 30s
+
 ## 4. Final Report
 
 ### 4.1. Requirements

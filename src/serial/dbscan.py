@@ -120,8 +120,8 @@ class MatrixDBSCAN(DBSCAN):
 
     def __init__(self, dataset):
         super(MatrixDBSCAN, self).__init__(dataset)
-        self._get_distance_matrix()     # self.dist_m will be created
-        del self.m
+        # self._get_distance_matrix()     # self.dist_m will be created
+        # del self.m
 
     def _get_distance_matrix(self):
         """
@@ -137,6 +137,8 @@ class MatrixDBSCAN(DBSCAN):
                 self.dist_m[p_id, q_id] = dist
 
     def _get_neighbours(self, p: int, eps: float, fast_mode=False) -> list:
+        if not hasattr(self, 'dist_m'):
+            self._get_distance_matrix()
         return np.nonzero(self.dist_m[p] < eps)[0]
 
     def _clustering(self, p, eps, min_pts, cluster_id, fast_mode=False) -> bool:
