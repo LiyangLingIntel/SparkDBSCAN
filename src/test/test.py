@@ -11,8 +11,8 @@ if __name__ == '__main__':
     dataset, _ = DataLoader.load_data_label(src)
 
     print('Naive DBSCAN:')
-    ndbscan = NaiveDBSCAN(dataset)
-    ndbscan.predict(0.7, 12)
+    ndbscan = NaiveDBSCAN(dataset, 0.7, 12)
+    ndbscan.predict()
     del ndbscan
 
     print('Matrix DBSCAN:')
@@ -20,8 +20,8 @@ if __name__ == '__main__':
     min_pts = [12, ]
     for i in eps:
         for j in min_pts:
-            mdbscan = MatrixDBSCAN(dataset)
-            mdbscan.predict(i, j)
+            mdbscan = MatrixDBSCAN(dataset, i, j)
+            mdbscan.predict()
             Evaluation.silhouette_coefficient(mdbscan)
             # print(mdbscan.tags)
             del mdbscan
