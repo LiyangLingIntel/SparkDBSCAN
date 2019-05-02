@@ -2,12 +2,13 @@
 Unit test or some module test can be added here
 """
 import os
+import random
 
 from src.utils import DataLoader, Evaluation
 from src.serial import NaiveDBSCAN, MatrixDBSCAN
 
 if __name__ == '__main__':
-    src = '../data/shape-sets/pathbased_300.txt'
+    src = '../data/shape-sets/aggregation_788.txt'
     dataset, _ = DataLoader.load_data_label(src)
 
     # print('Naive DBSCAN:')
@@ -16,12 +17,16 @@ if __name__ == '__main__':
     # del ndbscan
 
     print('Matrix DBSCAN:')
-    eps = [0.6, 0.8, 1]
-    min_pts = [1, 2, 3]
-    for i in eps:
-        for j in min_pts:
+    eps = [2.5, 4]
+    min_pts = [15, 30]
+    for t in range(10):
+        try:
+            i = round(random.uniform(*eps), 2)
+            j = random.randint(*min_pts)
             mdbscan = MatrixDBSCAN(dataset, i, j)
             mdbscan.predict()
             Evaluation.silhouette_coefficient(mdbscan)
             # print(mdbscan.tags)
             del mdbscan
+        except Exception as e:
+            print(e)

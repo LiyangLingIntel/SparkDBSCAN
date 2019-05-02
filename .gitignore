@@ -12,6 +12,7 @@ data/
 **/*.csv
 **/*.txt
 **/*.key
+Presentation/
 
 # jupyter notebook
 src/ipynb/.ipynb_checkpoints/

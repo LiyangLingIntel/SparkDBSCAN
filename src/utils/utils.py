@@ -52,7 +52,8 @@ class Evaluation(object):
         # preparation
         # if sum(dbscan_obj.tags) == -dbscan_obj.num_p:
         if sum(dbscan_obj.tags) < 0:
-            raise Exception('There are no tags in target dbscan method.')
+            raise Exception(f'eps:{dbscan_obj.eps} and min_pts:{dbscan_obj.min_pts} can cluter dataset well!')
+            
         if not hasattr(dbscan_obj, 'dist_m'):
             # by default, we try to use matrix dbscan to tune parameters
             # BUG: If use basic dbscan has no _get_distance_matrix() attribute function
