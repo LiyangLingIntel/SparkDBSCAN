@@ -11,3 +11,7 @@ data/
 **/*.docx
 **/*.csv
 **/*.txt
+**/*.key
+
+# jupyter notebook
+src/ipynb/.ipynb_checkpoints/
