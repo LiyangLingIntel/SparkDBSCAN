@@ -1,0 +1,159 @@
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage{usenix2019,epsfig,endnotes}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{geometry}
+\lstset{
+    numbers=left,
+    numberstyle= \tiny,
+    keywordstyle= \color{ blue!70},
+    commentstyle= \color{red!50!green!50!blue!50},
+    frame=shadowbox, % ��ӰЧ��
+    rulesepcolor= \color{ red!20!green!20!blue!20} ,
+    escapeinside=``, % Ӣ�ķֺ��п�д������
+    xleftmargin=1em,xrightmargin=1em, aboveskip=1em,
+    framexleftmargin=2em
+}
+
+\geometry{a4paper,scale=0.85}
+
+\newenvironment{figurehere}
+{\def\@captype{figure}}
+
+\begin{document}
+
+%don't want date printed
+\date{}
+
+%make title bold and 14 pt font (Latex default is non-bold, 16 pt)
+\title{\Large \bf Parallel Implementation of DBSCAN Algorithm Based on Spark}
+
+\author{
+{\rm Ling Liyang}\\
+20527456
+\and
+{\rm Liu Jinyu}\\
+20550336
+\and
+{\rm WANG Shen}\\
+20559502
+\and
+{\rm SONG Hongzhen}\\
+20551380
+}
+
+\maketitle
+
+% Use the following at camera-ready time to suppress page numbers.
+% Comment it out when you first submit the paper for review.
+\thispagestyle{empty}
+
+
+\section{Introduction}
+\quad With the explosive growth of data, we have entered the era of big data, thus many data mining related areas have been proposed in order to sift through masses of information. Among those domain areas, cluster analysis occupies a pivotal position in data mining, and the DBSCAN (Density-based spatial clustering of applications with noise) algorithm is one of the algorithms in Density-based Clustering Area. This algorithm aims to detect patterns automatically based purely on spatial location and local density, and is widely used in Outlier Detection and Distribution Recognition.
+
+However, due to the incredible amount of data need to be processed, operating efficiency and information storage become a challenge of traditional sequential DBSCAN. To overcome that difficulty, we propose the parallel version of DBSCAN based on SPARK.
+
+\section{Related Work}
+\subsection{Sequential DBSCAN}
+%\quad Density-based spatial clustering of applications with noise (DBSCAN) is a data clustering algorithm. It is a density-based clustering %algorithm: given a set of points in some space, it groups together points that are closely packed together (points with many nearby %neighbors), marking as outliers points that lie alone in low-density regions (whose nearest neighbors are too far away). DBSCAN is one of %the most common clustering algorithms and also most cited in scientific literature.
+\quad Density-based spatial clustering of applications with noise (DBSCAN) is one of the most common density-based clustering algorithms. With parameter �� and minPts defined, the algorithm classify each data point as a core point, a border point and an outlier(noise) based on following rules:
+\begin{itemize}
+\item A data point $q$ is a neighbor of data point $p$, if $dist(p,q)\le \epsilon$
+\item The $\epsilon$-neighborhood of point $p$, denoted as $N_{\epsilon}\left(p\right)$, is defined as $N_{\epsilon}\left(p\right) = \left\{q \in DB|dist(p,q) \le \epsilon\right\}$, where $DB$ represents all data points.
+\item A data point $p$ is a core point, if $|N_{\epsilon}\left(p\right)| \geq minPts$
+\item A data point $q$ is directly density-reachable from point $p$, if $p$ is a core point and $q\in N_{\epsilon}\left(p\right)$, $\forall p,q \in DB$
+\item A data point $q$ is density-reachable from $p$, if there exist a chain $p_0,p_1,\dots,p_n \in DB$ where $p_0 = p$ and $p_n = q$, such that each $p_{k+1}$ is directly density-reachable from $p_k$, $\forall k \in \{0,1,\dots,n-1\}$, $\forall p,q \in DB$
+\item A data point $q$ is density-connected with point $q$, if there is a core point $r \in DB$ such that both $p$ and $q$ are density-reachable from $r$, $\forall p,q \in DB$.
+\item $C$ is a cluster of $DB$:\\
+1)\quad $\forall p,q \in C$, $p$ is density-connected with $q$\\
+2)\quad If $p\in C$,$q\in DB$, and $p$ is density-connected with $q$, then $p\in C$
+\item A data point $p$ is a border point of cluster $C$, if $p$ is not a core point, $\forall p \in C$.
+\item A data point $p$ is a noise point, if $p$ is neither a core point nor a border point.
+\end{itemize}
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.2]{demo.png}
+\caption{Suppose minPts is 4, point A and all red points are core points. Point B, C are border points, Point N is noise point. Points A,B,C and all red points belongs to one cluster and point N is classified as outlier}
+\label{fig:label}
+\end{figure}
+%More fascinating text. Features\endnote{Remember to use endnotes, not footnotes!} galore, plethora of promises.\\
+\begin{figure*}[thp]
+\centering
+\includegraphics[width = \textwidth]{ly.png}
+\caption{The Flow Chart of Parallel DBSCAN}
+\label{fig:label}
+\end{figure*}
+\subsection{Pseudo Code}
+\begin{lstlisting}[language = Python]
+def DBSCAN(DB, distFunc,eps,minPts):
+  C = 0
+  for each point P in database DB:
+    if label(P) != undefined:
+      continue
+    N = RangeQuery(DB,distFunc,P,eps)
+
+    if |N| < minPts:
+      label(P) = Noise
+    else:
+      continue
+    C = C + 1
+    label(P) = C
+    Seed Set S = N \ {P}
+
+    for each point Q in S:
+      if label(Q) == Noise:
+        label(Q) = C
+      if label(Q) != undefined:
+        continue
+      label(Q) = C
+      N=RangeQuery(DB,distFunc,Q,eps)
+      if |N| > minPts:
+        S = S U N
+
+def RangeQuery(DB,distFunc,Q,eps):
+  N = empty_list
+  for each point P in database DB:
+    if distFunc(P,Q) <= eps:
+      N = N U {P}
+  return N
+
+\end{lstlisting}
+
+\section{Parallel DBSCAN}
+\subsection{Overview}
+
+\quad Based on sequential DBSCAN, it can be concluded that the procedure of DBSCAN is calculating the distance matrix, searching core points, and forming the clusters. Fortunately the distance calculation has little relationships among different point pairs which makes it possible to implement DBSCAN algorithm in parallel.
+
+In theory, algorithm efficiency will be improved if the complete dataset can be divided into multiple independent small data groups, and the points traverse and distance calculation process can be done by several processors. So, the main tasks should we focus on are dataset partitioning and cluster merging.
+
+\subsection{Plan on parallelization}
+\quad Before getting started, as most parallel programs, there are two core problems should have the proper solutions.
+
+\begin{itemize}
+\item \textbf{Data synchronisation}
+
+More specifically, we should define a effective way to deal with the points on the boundary of different partitions, in that case, clusters on different partitions could have the possibility to form into the same cluster in the merging process.
+\item \textbf{Efficiency}
+
+Based on the first problem, extra calculation is needed for partitioning and communication among partitions. What's more, the workloads and efficiency of each worker should also be considered, or some workers' idle and some workers' with heavy work which is not a ideal situation in parallel programs.
+\end{itemize}
+
+Therefore, for DBSCAN parallel implementation, we initially have steps as follow
+\begin{itemize}
+\item Load data from HDFS, preprocess to get input dataset
+\item Analyze dataset to get info about data size and distribution, based on it, allocate data points into partitions through proper methods
+\item Do local DBSCAN on each partition
+\item Merge the clustering results of partitions, remark to get final results
+\end{itemize}
+
+In the last stage, datasets with different size and data distribution will be applied to test the efficiency of parallelization and help to improve our algorithm.
+
+\begin{thebibliography}{1}
+\bibitem[1]aFang Huang, Qiang Zhu, Ji Zhou and Jian Tao. Research on the Parallelization of the DBSCAN Clustering Algorithm for Spatial Data Mining Based on the Spark Platform. \textit{Remote Sensing}, 2017.
+\bibitem[2]aYaobin HE, Haoyu TAN, Wuman LUO, Shengzhong FENG and Jiangping FANG. MR-DBSCAN: a scalable MapReduce-based DBSCAN algorithm for heavily skewed data. \textit{Front.Comput.Sci}, 2014.
+\bibitem[3]aDBSCAN Wikipedia.\\ https://en.wikipedia.org/wiki/DBSCAN.
+\end{thebibliography}
+
+\end{document}
