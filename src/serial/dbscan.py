@@ -36,7 +36,7 @@ class DBSCAN(object):
         if self.metric == 'euclidian':
             result = np.sqrt(np.power(self.m[b] - self.m[a], 2).sum())
         elif self.metric == 'manhattan':
-            result = np.abs(self.m[b] - self.m[a], 2).sum()
+            result = np.abs(self.m[b] - self.m[a]).sum()
         elif self.metric == 'fast-euclidian':
             result = np.power(self.m[b] - self.m[a], 2).sum()
         else:

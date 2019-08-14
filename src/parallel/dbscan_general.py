@@ -69,6 +69,7 @@ def spatial_partition(dataset, n_partitions, eps):
 
     # scatter points into bins with eps
     indexed_data = []
+    # double loop to ensure border points could be given multiple partition ID
     for id_pts in range(len(dataset)):     # index of point in dataset
         for id_ptt in range(num_par):
             if not (dataset[id_pts] > lower_bounds[id_ptt]).all():

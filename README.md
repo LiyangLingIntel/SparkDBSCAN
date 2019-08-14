@@ -3,19 +3,43 @@ MSBD5001 Big Data Computing Projects -- Algorithm Parallelization.
 
 [TOC]
 
-### Script Description
+### File Structure
 
-Current Source Code Architecture is
+Below is the tree of source code our parallel implementation of DBSCAN. 
 
-```pseudocode
-src
-├── serial
-│   ├── __init__.py
-│   └── dbscan.py
-└── test
-    ├── playground.py
-    └── test.py
 ```
+src
+├── ipynb
+│   ├── parallel_dbscan.ipynb 
+│   ├── MatrixDBSCAN.ipynb
+│   ├── NaiveDBSCAN.ipynb
+│   ├── partitioning.ipynb
+│   ├── rtree_fixpartition.ipynb
+│   └── rtree_partitioning.ipynb
+├── parallel
+│   ├── __init__.py
+│   ├── dbscan_general.py
+│   └── dbscan_rtree.py
+├── serial
+│   ├── __init__.py
+│   └── dbscan.py
+├── settings.py
+├── test
+│   ├── playground.py
+│   └── test.py
+└── utils
+    ├── __init__.py
+    ├── logger.py
+    └── utils.py
+```
+Our python code is under folder `parallel`, `serial`, `test` and `utils` , and `ipynb` files include how we explore the way of implementing.
+
+* `serial`: Under this folder, we implemented the serial DBSCAN algorithm and the improvement methods, and this module will act as local DBSCAN. 
+* `parallel`: Under this folder, we implemented our parallel functions about partitioning, merging in `pyspark`. Two file `dbscan_general.py` and `dbscan_rtree.py` namely contain our strategy on spartial evenly split and two rtree-based partition. This entire folder also act as a module can be call outside.
+* `utils`: In this module, we implemented utility functions, like clustering evaluation function and timer function.
+* `settings.py`: Under this file, we set some of configuration and global status.
+* `ipynb`: Under this folder, we used jupyter notebook to do some exploratory work，and plot out the clustering result. The final plots of our experiments mainly come from `parallel_dbscan.ipynb`.
+* `test`: Under this folder, some test can be done here.
 
 In `dbscan.py` two ways of serial dbscan algorithm is implemented: Naive method with redundant computation and optimal method with distance matrix.
 
@@ -54,12 +78,11 @@ Further works will be on proper **evaluation** method and **parallel** implement
 
 * [Clustering basic benchmark](http://cs.joensuu.fi/sipu/datasets/)
 
-#### Winning Points:
+#### Key Points:
 
 * http://localhost:4041/jobs/
 
   使用spark自带的任务监视器去查看任务的用时，资源分配，以及spark自动生成的DAG
-
 
 
 ## 1. Proposal

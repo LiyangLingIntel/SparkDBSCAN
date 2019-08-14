@@ -32,9 +32,9 @@ def parallel_dbscan(dataset,
                     rtree=False,
                     rtree_mtd='cbs'):
 
-    #     b_dataset = sc.broadcast(dataset)
-    #     b_eps = sc.broadcast(eps)
-    #     b_min_pts = sc.broadcast(min_pts)
+    b_dataset = sc.broadcast(dataset)
+    b_eps = sc.broadcast(eps)
+    b_min_pts = sc.broadcast(min_pts)
 
     partitioned_rdd = partition(dataset,
                                 eps,
